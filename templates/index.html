@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Leakage Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header>
+            <h1>Leakage Tracker</h1>
+            <p>Monitor your non-essential expenses</p>
+        </header>
+        
+        <main>
+            <div class="leakage-card glass-effect">
+                <h2>Total Wasted Money</h2>
+                <div class="amount" id="leakage-amount">$0.00</div>
+                <div class="status-indicator">
+                    <span class="pulse"></span> Live Syncing
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Intervention Modal -->
+    <div id="intervention-modal" class="modal-overlay hidden">
+        <div class="modal-content glass-effect">
+            <div class="modal-header">
+                <h2>⚠️ Action Required</h2>
+                <p>A new unclassified transaction needs your attention.</p>
+            </div>
+            
+            <div class="transaction-details">
+                <div class="detail-row">
+                    <span class="label">Amount:</span>
+                    <span class="value" id="modal-amount">--</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Source:</span>
+                    <span class="value" id="modal-source">--</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Description:</span>
+                    <span class="value" id="modal-desc">--</span>
+                </div>
+            </div>
+
+            <form id="categorize-form">
+                <input type="hidden" id="modal-expense-id">
+                <div class="form-group">
+                    <label for="category-select">Categorize as:</label>
+                    <select id="category-select" required>
+                        <option value="" disabled selected>Select a category...</option>
+                        <!-- Categories will be populated here -->
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary">Save & Continue</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
