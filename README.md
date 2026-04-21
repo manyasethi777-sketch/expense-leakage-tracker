@@ -1,0 +1,104 @@
+﻿# 💸 Small Expense Leakage Tracker
+
+## 📌 Overview
+
+The **Small Expense Leakage Tracker** is a database-driven application designed to help users monitor and analyze their daily micro-expenses (like snacks, transport, subscriptions, etc.), which often go unnoticed but accumulate significantly over time.
+
+This project focuses on applying core **DBMS concepts** to build a practical and impactful financial awareness tool.
+
+---
+
+## 🎯 Problem Statement
+
+Many individuals underestimate their daily minor expenses because:
+
+* Each expense feels insignificant
+* No structured tracking system exists
+* Lack of insights into spending patterns
+
+👉 Result: Gradual financial leakage without awareness.
+
+---
+
+## 💡 Solution
+
+This system allows users to:
+
+* Record small daily expenses
+* Categorize them (food, travel, utilities, etc.)
+* Analyze spending trends
+* Identify unnecessary expenditures
+
+---
+
+## 🛠️ Features
+
+### 🔹 1. Expense Tracking
+
+* Add daily expenses with:
+
+  * Amount
+  * Category
+  * Date
+  * Description
+
+### 🔹 2. Categorization
+
+* Predefined categories:
+
+  * Food 🍔
+  * Transport 🚗
+  * Entertainment 🎬
+  * Miscellaneous 📦
+
+### 🔹 3. Data Analysis
+
+* Total expenditure
+* Category-wise spending
+* Daily/weekly/monthly summaries
+
+### 🔹 4. Insights Generation
+
+* Detect highest spending category
+* Identify spending patterns
+* Highlight unnecessary expenses
+
+### 🔹 5. User Management (Optional Enhancement)
+
+* Multiple users
+* Personalized expense tracking
+
+
+---
+
+## 🚀 How It Works
+
+1. User enters daily expenses
+2. Data is stored in structured tables
+3. Queries process the data
+4. Results show:
+
+   * Total spending
+   * Category breakdown
+   * Trends
+
+---
+
+
+## 🌍 Real-World Impact
+
+* Promotes financial awareness
+* Helps in budgeting
+* Reduces unnecessary spending
+* Encourages mindful consumption
+
+---
+
+## 🔮 Future Enhancements
+
+* Visualization dashboard (charts/graphs)
+* Mobile app integration
+* Expense prediction using ML
+* Alerts for overspending
+
+---
