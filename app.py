@@ -97,26 +97,82 @@ def categorize_expense(expense_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route('/api/leakage', methods=['GET'])
-def get_leakage():
+@app.route('/api/dashboard_data', methods=['GET'])
+def get_dashboard_data():
     try:
         conn = get_db_connection()
         cur = conn.cursor(cursor_factory=RealDictCursor)
         
-        # Calculate total wasted money (is_essential = false)
-        query = """
-            SELECT COALESCE(SUM(e.amount), 0) AS total_wasted
-            FROM Expenses e
+        # 1. Fetch monthly limit
+        cur.execute("SELECT monthly_limit FROM user_settings WHERE user_id = 1 LIMIT 1;")
+        settings = cur.fetchone()
+        budget_limit = settings['monthly_limit'] if settings else 0
+        
+        # 2. Fetch total spent and total wasted
+        # Note: We filter by 'categorized' so we don't include pending interventions in the chart
+        query_totals = """
+            SELECT 
+                COALESCE(SUM(e.amount), 0) AS total_spent,
+                COALESCE(SUM(CASE WHEN c.is_essential = false THEN e.amount ELSE 0 END), 0) AS total_wasted
+            FROM expenses e
             JOIN Categories c ON e.category_id = c.category_id
-            WHERE c.is_essential = false;
+            WHERE e.user_id = 1 AND e.status = 'categorized';
         """
-        cur.execute(query)
-        result = cur.fetchone()
+        cur.execute(query_totals)
+        totals = cur.fetchone()
+        
+        # 3. Fetch all categorized expenses for the table
+        query_expenses = """
+            SELECT 
+                e.expense_id, e.amount, e.description, e.expense_date AS date, 
+                c.category_name, c.is_essential
+            FROM expenses e
+            JOIN Categories c ON e.category_id = c.category_id
+            WHERE e.user_id = 1 AND e.status = 'categorized'
+            ORDER BY e.expense_date DESC, e.expense_id DESC;
+        """
+        cur.execute(query_expenses)
+        all_expenses = cur.fetchall()
         
         cur.close()
         conn.close()
         
-        return jsonify({"total_wasted": result['total_wasted']}), 200
+        # Serialize dates for JSON
+        for exp in all_expenses:
+            if exp['date']:
+                exp['date'] = exp['date'].strftime('%Y-%m-%d')
+        
+        return jsonify({
+            "budget_limit": budget_limit,
+            "total_spent": totals['total_spent'],
+            "total_wasted": totals['total_wasted'],
+            "all_expenses": all_expenses
+        }), 200
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/budget', methods=['PUT'])
+def update_budget():
+    try:
+        data = request.json
+        new_limit = data.get('monthly_limit')
+        if new_limit is None:
+            return jsonify({"error": "monthly_limit is required"}), 400
+            
+        conn = get_db_connection()
+        cur = conn.cursor()
+        
+        # Upsert user settings (assuming user_id 1)
+        cur.execute("UPDATE user_settings SET monthly_limit = %s WHERE user_id = 1", (new_limit,))
+        if cur.rowcount == 0:
+            cur.execute("INSERT INTO user_settings (user_id, monthly_limit) VALUES (1, %s)", (new_limit,))
+        
+        conn.commit()
+        cur.close()
+        conn.close()
+        
+        return jsonify({"message": "Budget updated successfully"}), 200
         
     except Exception as e:
         return jsonify({"error": str(e)}), 500
