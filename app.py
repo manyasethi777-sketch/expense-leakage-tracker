@@ -177,6 +177,24 @@ def update_budget():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route('/api/expenses', methods=['DELETE'])
+def reset_expenses():
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        
+        # Delete all expenses for the hardcoded user_id = 1
+        cur.execute("DELETE FROM expenses WHERE user_id = 1;")
+        
+        conn.commit()
+        cur.close()
+        conn.close()
+        
+        return jsonify({"message": "All expenses reset successfully"}), 200
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 @app.route('/api/webhook/bank_transaction', methods=['POST'])
 def bank_transaction_webhook():
     try:

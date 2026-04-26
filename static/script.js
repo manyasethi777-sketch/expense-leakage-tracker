@@ -252,4 +252,41 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error updating budget:', error);
         }
     });
+
+    // Reset Data Logic
+    const resetDataBtn = document.getElementById('reset-data-btn');
+    const resetModal = document.getElementById('reset-modal');
+    const cancelResetBtn = document.getElementById('cancel-reset-btn');
+    const confirmResetBtn = document.getElementById('confirm-reset-btn');
+
+    if (resetDataBtn) {
+        resetDataBtn.addEventListener('click', () => {
+            resetModal.classList.remove('hidden');
+        });
+    }
+
+    if (cancelResetBtn) {
+        cancelResetBtn.addEventListener('click', () => {
+            resetModal.classList.add('hidden');
+        });
+    }
+
+    if (confirmResetBtn) {
+        confirmResetBtn.addEventListener('click', async () => {
+            try {
+                const res = await fetch('/api/expenses', {
+                    method: 'DELETE'
+                });
+
+                if (res.ok) {
+                    resetModal.classList.add('hidden');
+                    fetchDashboardData();
+                } else {
+                    console.error('Failed to reset data');
+                }
+            } catch (error) {
+                console.error('Error resetting data:', error);
+            }
+        });
+    }
 });

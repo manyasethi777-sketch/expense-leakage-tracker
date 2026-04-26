@@ -13,6 +13,7 @@
         <header>
             <h1>Leakage Dashboard</h1>
             <p>Monitor your non-essential expenses</p>
+            <button id="reset-data-btn" class="btn-danger-outline" title="Delete all expenses">Reset Data</button>
         </header>
         
         <!-- Top Row: Summary Cards -->
@@ -119,6 +120,20 @@
                     <button type="submit" class="btn-primary">Save</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Reset Confirmation Modal -->
+    <div id="reset-modal" class="modal-overlay hidden">
+        <div class="modal-content glass-effect">
+            <div class="modal-header">
+                <h2 style="color: #ef4444;">⚠️ Reset All Data?</h2>
+                <p>Are you sure you want to delete all expenses? This cannot be undone.</p>
+            </div>
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button type="button" class="btn-primary" id="cancel-reset-btn" style="background: transparent; border: 1px solid var(--text-secondary); color: var(--text-secondary);">Cancel</button>
+                <button type="button" class="btn-primary" id="confirm-reset-btn" style="background: #ef4444;">Yes, Delete Everything</button>
+            </div>
         </div>
     </div>
 
